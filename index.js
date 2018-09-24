@@ -65,6 +65,17 @@ function rollback(client, done) {
 	})
 }
 
+MySQLDB.prototype.getConnection = callback => pool.getConnection((error, connection) => {
+	if (error) {
+		if (debug) console.log(error);
+		connection.release();
+		callback(error);
+		return;
+	}
+	callback(null, connection)
+})
+
+
 // Persists an op and snapshot if it is for the next version. Calls back with
 // callback(err, succeeded)
 MySQLDB.prototype.commit = (collection, id, op, snapshot, options, callback) => {
